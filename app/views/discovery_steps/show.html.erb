@@ -1,0 +1,7 @@
+<%= turbo_frame_tag :step_content do %>
+  <% if @step.completed? %>
+    <%= render "discovery_steps/step_output", step: @step %>
+  <% else %>
+    <%= render "discovery_steps/step_form", step: @step %>
+  <% end %>
+<% end %>

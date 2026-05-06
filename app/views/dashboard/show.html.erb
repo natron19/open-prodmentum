@@ -1,0 +1,45 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="mb-1">Welcome back, <%= current_user.first_name %>!</h1>
+    <p class="text-muted mb-0">Your product discovery workflows.</p>
+  </div>
+  <%= link_to "New Product", new_product_path, class: "btn btn-cta" %>
+</div>
+
+<% products = current_user.products.includes(:discovery_steps).order(created_at: :desc) %>
+
+<% if products.any? %>
+  <div class="row g-3">
+    <% products.each do |product| %>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title fw-semibold"><%= product.name %></h5>
+            <p class="card-text text-muted small mb-1"><strong>Customer:</strong> <%= product.target_customer %></p>
+            <p class="card-text text-muted small mb-3"><strong>Goal:</strong> <%= truncate(product.strategic_goal, length: 100) %></p>
+
+            <div class="d-flex gap-1 mb-3">
+              <% product.discovery_steps.order(:step_number).each do |step| %>
+                <span class="<%= step.completed? ? 'step-complete-badge' : 'text-muted' %>" title="<%= step.step_name %>">&#9679;</span>
+              <% end %>
+            </div>
+
+            <% completed_count = product.discovery_steps.count(&:completed?) %>
+            <p class="text-muted small mb-3"><%= completed_count %> of 5 steps complete</p>
+
+            <%= link_to completed_count > 0 ? "Continue Discovery" : "Start Discovery",
+                  product_path(product),
+                  class: "btn btn-sm btn-cta" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card">
+    <div class="card-body text-center py-5">
+      <p class="text-muted mb-3">You haven't started a product discovery yet.</p>
+      <%= link_to "Start your first discovery", new_product_path, class: "btn btn-cta" %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,37 @@
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <h1 class="mb-1"><%= @product.name %></h1>
+    <p class="text-muted small mb-0">
+      <strong>Customer:</strong> <%= @product.target_customer %> &nbsp;·&nbsp;
+      <strong>Goal:</strong> <%= truncate(@product.strategic_goal, length: 80) %>
+    </p>
+  </div>
+  <div class="d-flex gap-2 flex-shrink-0">
+    <%= link_to "Export .md", export_product_path(@product), class: "btn btn-sm btn-outline-secondary" %>
+    <%= link_to "Edit", edit_product_path(@product), class: "btn btn-sm btn-outline-secondary" %>
+    <%= link_to "Delete", product_path(@product),
+          data: { turbo_method: :delete, turbo_confirm: "Delete this product and all its steps?" },
+          class: "btn btn-sm btn-outline-danger" %>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header small fw-semibold text-muted text-uppercase">Discovery Steps</div>
+      <%= render "products/step_tracker",
+            product: @product, steps: @steps, active_step: @active_step %>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body p-4">
+        <%= turbo_frame_tag :step_content,
+              src: product_step_path(@product, @active_step) do %>
+          <div class="text-center py-5 text-muted">Loading step...</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

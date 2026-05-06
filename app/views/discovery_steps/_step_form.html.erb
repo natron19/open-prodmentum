@@ -1,0 +1,205 @@
+<% parsed = parse_step_input(step.user_input) %>
+
+<%= form_with model: [step.product, step],
+              url: product_step_path(step.product, step),
+              data: { controller: "discovery-form",
+                      action: "turbo:submit-start->discovery-form#handleSubmit",
+                      "discovery-form-cancel-url-value": product_step_path(step.product, step) } do |f| %>
+
+  <h5 class="fw-semibold mb-1">
+    <span class="badge rounded-pill me-2" style="background-color: var(--accent);">
+      <%= step.step_number %>
+    </span>
+    <%= step.step_name %>
+  </h5>
+  <p class="text-muted small mb-4">
+    <%= {
+      1 => "Sharpen your problem statement so you're solving the right thing.",
+      2 => "Plan your customer research interviews before you build anything.",
+      3 => "Compare solution ideas and find the fastest way to test each one.",
+      4 => "Score your leading idea against Cagan's four product risks.",
+      5 => "Synthesize what you learned and decide what to do next."
+    }[step.step_number] %>
+  </p>
+
+  <% case step.step_number %>
+  <% when 1 %>
+    <div class="mb-3 p-3 rounded border border-secondary-subtle bg-body-secondary">
+      <p class="small text-muted mb-1 fw-semibold">Target Customer</p>
+      <p class="mb-2"><%= step.product.target_customer %></p>
+      <p class="small text-muted mb-1 fw-semibold">Strategic Goal</p>
+      <p class="mb-0"><%= step.product.strategic_goal %></p>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :problem, "Problem Statement", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        Describe the problem your target customer faces. Be specific about the pain, not the solution.
+      </small>
+      <%= f.text_area :problem,
+            rows: 5,
+            class: "form-control",
+            placeholder: "e.g. B2B SaaS PMs have no lightweight way to share a prioritized backlog with customers and gather structured feedback without scheduling a call.",
+            value: parsed[:problem] %>
+    </div>
+
+  <% when 2 %>
+    <div class="mb-3">
+      <%= f.label :interviewees, "Who to Interview", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        Describe the specific type of customer you want to interview — role, company size, situation.
+      </small>
+      <%= f.text_area :interviewees,
+            rows: 3,
+            class: "form-control",
+            placeholder: "e.g. Product managers at B2B SaaS companies with 10–200 employees who currently use Jira or Linear.",
+            value: parsed[:interviewees] %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :existing_knowledge, "What You Already Know", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        Summarize any existing research, customer conversations, or data you already have on this problem.
+      </small>
+      <%= f.text_area :existing_knowledge,
+            rows: 3,
+            class: "form-control",
+            placeholder: "e.g. 3 customers mentioned this in support tickets. No formal interviews yet.",
+            value: parsed[:existing_knowledge] %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :biggest_assumption, "Biggest Assumption to Test", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        What is the single most important thing you're assuming that, if wrong, would kill this idea?
+      </small>
+      <%= f.text_field :biggest_assumption,
+            class: "form-control",
+            placeholder: "e.g. PMs would share their backlog externally if the tool made it safe and structured.",
+            value: parsed[:biggest_assumption] %>
+    </div>
+
+  <% when 3 %>
+    <div class="mb-3">
+      <%= f.label :solution_ideas, "Solution Ideas", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        List your solution ideas, one per line. Include even rough or half-formed ideas — the AI will help compare them.
+      </small>
+      <%= f.text_area :solution_ideas,
+            rows: 5,
+            class: "form-control",
+            placeholder: "e.g.\nA shareable roadmap portal with voting\nSlack integration for async feedback threads\nWeekly digest email with backlog snapshot",
+            value: parsed[:solution_ideas] %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :constraints, "Constraints", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        Key constraints (time, team size, tech stack, budget) that should shape the ideation.
+      </small>
+      <%= f.text_field :constraints,
+            class: "form-control",
+            placeholder: "e.g. 2 engineers, 6 weeks, must integrate with our existing Rails app.",
+            value: parsed[:constraints] %>
+    </div>
+
+  <% when 4 %>
+    <div class="mb-3">
+      <%= f.label :solution_idea, "Leading Solution Idea", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        Which solution idea are you moving forward with?
+      </small>
+      <%= f.text_field :solution_idea,
+            class: "form-control",
+            placeholder: "e.g. A shareable roadmap portal with structured customer voting.",
+            value: parsed[:solution_idea] %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :value_risk_context, "Value Risk Context", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        What evidence do you have (or lack) that customers actually want this solution?
+      </small>
+      <%= f.text_area :value_risk_context,
+            rows: 2,
+            class: "form-control",
+            placeholder: "e.g. 3 customers asked for a 'roadmap view' in support tickets but we've never tested if they'd pay for it.",
+            value: parsed[:value_risk_context] %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :usability_risk_context, "Usability Risk Context", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        How likely is it that customers can figure out how to use this without help?
+      </small>
+      <%= f.text_area :usability_risk_context,
+            rows: 2,
+            class: "form-control",
+            placeholder: "e.g. Sharing settings could be confusing — customers need to control what customers see vs. internal team.",
+            value: parsed[:usability_risk_context] %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :feasibility_risk_context, "Feasibility Risk Context", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        What are the hardest technical or operational challenges to build this?
+      </small>
+      <%= f.text_area :feasibility_risk_context,
+            rows: 2,
+            class: "form-control",
+            placeholder: "e.g. Real-time sync between internal Jira and the external portal is complex. Permissions model needs careful design.",
+            value: parsed[:feasibility_risk_context] %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :viability_risk_context, "Business Viability Risk Context", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        Does this make business sense — pricing, legal, support burden, strategic fit?
+      </small>
+      <%= f.text_area :viability_risk_context,
+            rows: 2,
+            class: "form-control",
+            placeholder: "e.g. Could cannibalize our paid consulting engagements. Need to validate willingness to pay before building.",
+            value: parsed[:viability_risk_context] %>
+    </div>
+
+  <% when 5 %>
+    <div class="mb-3">
+      <%= f.label :learnings, "What You Learned", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        Summarize the key things you learned from your research and risk assessment. What surprised you?
+      </small>
+      <%= f.text_area :learnings,
+            rows: 4,
+            class: "form-control",
+            placeholder: "e.g. Customers want roadmap transparency but are nervous about sharing with all customers — they want segmentation. Feasibility is lower risk than we thought.",
+            value: parsed[:learnings] %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :changes, "What You'd Change", class: "form-label fw-semibold" %>
+      <small class="text-muted d-block mb-1">
+        Based on what you learned, how has your solution idea or approach evolved?
+      </small>
+      <%= f.text_area :changes,
+            rows: 4,
+            class: "form-control",
+            placeholder: "e.g. Narrowing from 'all customers' to 'specific customer segments' per roadmap. De-prioritizing real-time sync in v1.",
+            value: parsed[:changes] %>
+    </div>
+
+  <% end %>
+
+  <div data-discovery-form-target="content">
+    <div class="d-flex gap-2 mt-4">
+      <%= f.submit "Generate with AI",
+            class: "btn btn-cta",
+            data: { discovery_form_target: "submit" } %>
+      <%= link_to "Cancel",
+            product_step_path(step.product, step),
+            data: { turbo_frame: :step_content },
+            class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+<% end %>

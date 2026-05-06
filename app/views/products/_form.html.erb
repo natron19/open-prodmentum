@@ -1,0 +1,43 @@
+<%= form_with model: product, class: "needs-validation" do |f| %>
+  <% if product.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, "Product Name", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", placeholder: "e.g. QuickFeedback", maxlength: 120 %>
+    <div class="form-text">Max 120 characters.</div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :target_customer, "Target Customer", class: "form-label" %>
+    <%= f.text_field :target_customer, class: "form-control",
+          placeholder: "e.g. B2B SaaS product managers at companies with 10–200 employees",
+          maxlength: 200 %>
+    <div class="form-text">Who has the problem? Be specific. Max 200 characters.</div>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :strategic_goal, "Strategic Goal (OKR)", class: "form-label" %>
+    <%= f.text_field :strategic_goal, class: "form-control",
+          placeholder: "e.g. Increase feature adoption by 25% in Q3",
+          maxlength: 300 %>
+    <div class="form-text">The OKR or strategic objective this product supports. Max 300 characters.</div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= f.submit product.new_record? ? "Create Product" : "Save Changes",
+          class: "btn btn-primary" %>
+    <% if product.new_record? %>
+      <%= link_to "Cancel", products_path, class: "btn btn-outline-secondary" %>
+    <% else %>
+      <%= link_to "Cancel", product_path(product), class: "btn btn-outline-secondary" %>
+    <% end %>
+  </div>
+<% end %>

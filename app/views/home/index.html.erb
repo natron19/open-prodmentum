@@ -1,0 +1,54 @@
+<div class="py-5 text-center">
+  <h1 class="display-5 fw-bold mb-3"><%= ENV.fetch("APP_NAME", "Prodmentum Demo") %></h1>
+  <p class="lead text-muted mb-2"><%= ENV.fetch("APP_TAGLINE", "") %></p>
+  <p class="text-muted mb-4"><%= ENV.fetch("APP_DESCRIPTION", "") %></p>
+
+  <div class="mt-4 d-flex justify-content-center gap-3">
+    <% if signed_in? %>
+      <%= link_to "My Products", products_path, class: "btn btn-cta btn-lg" %>
+    <% else %>
+      <%= link_to "Start a Product Discovery", sign_up_path, class: "btn btn-cta btn-lg" %>
+      <%= link_to "Sign in", sign_in_path, class: "btn btn-outline-secondary btn-lg" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row justify-content-center mt-5">
+  <div class="col-lg-9">
+    <h2 class="h5 fw-semibold text-center mb-4 text-muted">Five steps from idea to validated decision</h2>
+
+    <div class="row g-3">
+      <% [
+        ["1", "Opportunity Framing",         "Sharpen your problem statement, extract jobs-to-be-done, and surface the discovery questions you need to answer before committing."],
+        ["2", "Customer Research Planning",  "Generate a structured discovery interview guide so you talk to users about behavior, not opinions."],
+        ["3", "Ideation & Prototyping",      "Compare solution ideas across effort and value. Get a wildcard idea you probably haven't considered. Find the fastest prototype test for each."],
+        ["4", "Risk Assessment",             "Score your leading idea across Cagan's four product risks — Value, Usability, Feasibility, and Business Viability — with specific mitigations."],
+        ["5", "Iteration Planning",          "Synthesize what you learned. Get a prioritized experiment list, an iterate/pivot/proceed recommendation, and a stakeholder-ready discovery summary."]
+      ].each do |num, name, desc| %>
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-start gap-3">
+                <span class="badge rounded-pill fs-6 flex-shrink-0" style="background-color: var(--accent);">
+                  <%= num %>
+                </span>
+                <div>
+                  <h6 class="fw-semibold mb-1"><%= name %></h6>
+                  <p class="text-muted small mb-0"><%= desc %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-4 p-3 rounded border border-secondary-subtle">
+      <p class="text-muted small mb-0">
+        Based on Marty Cagan's continuous discovery framework from <em>INSPIRED</em> and <em>EMPOWERED</em>.
+        The four questions every product team should answer before engineering begins:
+        does the customer want it, can they use it, can we build it, and does it work commercially?
+      </p>
+    </div>
+  </div>
+</div>
