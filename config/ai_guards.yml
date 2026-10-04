@@ -1,0 +1,23 @@
+# Per-app guardrail configuration, read by AiGuardConfig.
+# See docs/ai-guardrails.md (Layer 1b: AiOutputGuard) and docs/ai-evals.md.
+
+# Prodmentum is a product-discovery coach for PMs; personal distress is out of scope.
+crisis_terms: []
+
+# All five discovery steps return markdown that DiscoveryStepsController stores
+# as-is and the view renders with render_markdown. Nothing parses JSON, so every
+# step is format: text (generic checks only: non-empty, no prompt leak, no
+# profanity, no invented PII).
+templates:
+  health_ping:
+    format: text
+  prodmentum_step1_opportunity_v1:
+    format: text
+  prodmentum_step2_research_v1:
+    format: text
+  prodmentum_step3_ideation_v1:
+    format: text
+  prodmentum_step4_risk_v1:
+    format: text
+  prodmentum_step5_iteration_v1:
+    format: text
